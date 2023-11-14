@@ -1,4 +1,4 @@
-#Práctica 5 Login parte 2
+# Práctica 5 Login parte 2
 
 
 Este proyecto es una aplicación web desarrollada con el framework Flask en Python. La aplicación tiene como objetivo principal gestionar el inicio de sesión de usuarios, verificando sus credenciales en una base de datos MySQL. A continuación, se proporciona una descripción detallada de diferentes aspectos del proyecto:
