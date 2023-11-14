@@ -1,105 +1,29 @@
-# Practica-5-Login-parte-2
+# Practica5-Login-parte1
 
-Este proyecto es una aplicación web desarrollada con el framework Flask en Python. La aplicación tiene como objetivo principal gestionar el inicio de sesión de usuarios, verificando sus credenciales en una base de datos MySQL. A continuación, se proporciona una descripción detallada de diferentes aspectos del proyecto:
+Enlace de github: https://github.com/EryonVF/Pr-ctica5-Login-parte1.git
 
-## Paquetes Utilizados
+Este proyecto es una iniciativa de práctica que incorpora un sistema de inicio de sesión básico utilizando Flask, Flask-Login y Flask-WTF. Dentro de la aplicación, encontrarás dos páginas principales: la página de inicio de sesión y la página de inicio.
 
-- **Flask**: Framework web para Python.
-- **Flask-MySQLdb**: Extensión para integrar MySQL con Flask.
-- **MySQL Connector**: Módulo para interactuar con bases de datos MySQL en Python.
+## Estructura de Directorios
+El proyecto sigue una estructura de directorios organizada de la siguiente manera:
 
-## Configuración de la Base de Datos
+- `database`: Un directorio destinado a almacenar archivos de base de datos (aunque aún no se han implementado en esta práctica).
+- `src`: El directorio principal que contiene el código fuente de la aplicación.
+  - `models`: Un espacio para modelos de datos (aunque todavía no se han desarrollado en esta práctica).
+  - `static`: El lugar para archivos estáticos como hojas de estilo CSS e imágenes.
+    - `css`: Contiene archivos CSS personalizados.
+    - `img`: Aquí se encuentran las imágenes.
+  - `templates`: Contiene las plantillas HTML.
+    - `auth`: Alberga la plantilla de la página de inicio de sesión.
+- `env`: El entorno virtual donde se gestionan las dependencias del proyecto.
 
-Se utiliza MySQL como sistema de gestión de base de datos. En el archivo `app.py`, se configuran los detalles de la base de datos en la clase `DevelopmentConfig`, que contiene los parámetros como host, usuario, contraseña y nombre de la base de datos.
 
-```python
-class DevelopmentConfig:
-    DEBUG = True
-    MYSQL_HOST = "localhost"
-    MYSQL_USER = "usuario1"
-    MYSQL_PASSWORD = "Machador0231."
-    MYSQL_DB = "store"
-```
+## Dificultades
+1. **Trabajo con Formularios en Flask-WTF:** Deberia decomprender cómo funcionan los formularios en Flask-WTF y cómo conectarlos a las rutas de Flask.
 
-## Inicialización de la Aplicación Flask
+2. **Implementación de Funcionalidades de Inicio de Sesión:** Se tiene fificultades con la implementación de la lógica de autenticación y el manejo de sesiones. 
 
-Se crea una instancia de la aplicación Flask mediante `app = Flask(__name__)`.
+3. **Diseño y Estilos:** En el diseño aunque se utilize boostrap se necesito ajustar algunas cosas con css para que se vea poquito mejor aunque no me convencio del todo.
 
-## Conexión a la Base de Datos
+4. **Estructura del Proyecto:** Tenia que organizarlo de manera mas efectivay investigar un poco mas la estrucura y como Flask maneja las plantillas 
 
-Se utiliza Flask-MySQLdb para integrar MySQL con la aplicación Flask. Se verifica la conexión a la base de datos antes de ejecutar la aplicación mediante la creación de un cursor y la ejecución de una consulta de prueba.
-
-```python
-try:
-    # Verifica la conexión a la base de datos antes de ejecutar la aplicación
-    with app.app_context():
-        db = mysql.connection
-        cursor = db.cursor()
-        cursor.execute("SELECT 1")
-        cursor.close()
-        print("Conexión a la base de datos establecida correctamente.")
-except Exception as e:
-    print("Error de conexión a la base de datos:", e)
-```
-
-## Realización del Login
-
-### 1. Verificación de la Conexión a la Base de Datos
-
-Primero, en el archivo `app.py`, se verifica la conexión a la base de datos antes de ejecutar la aplicación Flask. Esto se realiza utilizando el paquete `flask_mysqldb`. La verificación incluye la ejecución de una simple consulta para asegurarse de que la conexión sea exitosa.
-
-```python
-try:
-    with app.app_context():
-        db = mysql.connection
-        cursor = db.cursor()
-        cursor.execute("SELECT 1")
-        cursor.close()
-        print("Conexión a la base de datos establecida correctamente.")
-except Exception as e:
-    print("Error de conexión a la base de datos:", e)
-```
-
-### 2. Realización del Login
-
-En la función `login` de `app.py`, se implementa el proceso de inicio de sesión. Se crea una instancia del usuario con los datos proporcionados en el formulario y se utiliza el método `login` del modelo `ModelUsers` para verificar la identidad del usuario.
-
-```python
-@app.route("/login", methods=["GET", "POST"])
-def login():
-    if request.method == "POST":
-        try:
-            user = User(0, request.form['username'], request.form['password'], 0)
-            print("Intento de inicio de sesión para el usuario:", user.username)
-            
-            with app.app_context():
-                logged_user = ModelUsers.login(mysql, user)
-            
-            print("Usuario autenticado:", logged_user)
-            
-            if logged_user is not None:
-                if logged_user.usertype == 1:
-                    return redirect(url_for("admin"))
-
-```
-### 3. Manejo de Excepciones
-
-Dentro de la función `login`, se manejan diferentes excepciones para proporcionar mensajes de error significativos. Esto incluye excepciones específicas para contraseñas incorrectas y problemas de interacción con la base de datos.
-```
-                else:
-                    return redirect(url_for("home"))
-            else:
-                print("Acceso rechazado. Verifica tu nombre de usuario y contraseña.")
-                flash("Acceso rechazado. Verifica tu nombre de usuario y contraseña.", 'error')
-                return render_template("auth/login.html")
-        except ValueError as ve:
-            print("Contraseña incorrecta:", ve)
-            flash("Contraseña incorrecta. Verifica tu nombre de usuario y contraseña.", 'error')
-            return render_template("auth/login.html")
-        except Exception as e:
-            print("Error al interactuar con la base de datos:", e)
-            flash("Ocurrió un error durante el inicio de sesión. Por favor, inténtalo nuevamente.", 'error')
-            return render_template("auth/login.html")
-    else:
-        return render_template("auth/login.html")
-```

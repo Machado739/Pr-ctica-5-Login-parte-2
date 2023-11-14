@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block miCSS %}
+<link rel="stylesheet" href="{{ url_for('static', filename='../../static/css/login.css') }}">
+{% endblock %}
+
+{% block titulo %}Login{% endblock %}
+
+{% block cuerpo %}
+<h1>Login</h1>
+<!-- Modifica las clases del formulario según tus preferencias -->
+<form action="/login" method="POST" class="my-4">
+    <div class="form-group">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Login</button>
+</form>
+
+<!-- Agrega esta sección para mostrar mensajes de error -->
+{% block mensajes %}
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="alert alert-danger">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+{% endblock %}
+
+{% endblock %}
